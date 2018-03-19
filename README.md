@@ -66,5 +66,10 @@ The body can be
     }
     ```
 
+Lambdas can be assigned to any variables, fields and parameters which's type is a functional interface. So the first example can be shortened ever futher by avoiding a variable:
+```java
+new Thread(() -> System.out.println("Hello, runnable!")).start();
+```
+
 ## Method references
 ## Streams
