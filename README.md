@@ -77,6 +77,8 @@ new Thread(() -> System.out.println("Hello, runnable!")).start();
 ```
 Lambdas are implementations of functional interfaces: the signature of the lambda must match the signature of the single abstract method in the interface. In that case the body of the lambda will be the implementation of that method. This saves us from having to write lots of boilerplate for anonymous inner classes as seen in the first example.
 
+While multiline lambdas are possible, they are often considered bad style. It is neater to put the long body into a separate method and call that instead in a single line lambda (or even better, use a method reference).
+
 ### Lambda types
 Java is a statically typed language and so far every variable, field and parameter type has been explicitly written out but that's not the case with lambdas: usually the parameters only have names and the return type isn't written. How can this possibly work and still be correct?
 
@@ -111,3 +113,84 @@ Method references can be
 All of the above work with multiple parameters as well. There's no need to really remember these three forms. You can always just write a lambda and allow IntelliJ to suggest using a method reference instead if possible.
 
 ## Streams
+Streams are one of the main reasons for having lambdas in the first place. They are instances of the generic type `Stream<T>`, so they are a lot like collections (list, set, etc) but are also vastly different. While collections focus on storing elements, streams focus on manipulating elements and don't directly store them.
+
+There are three steps to using streams:
+1. creation,
+2. some number of intermediate operations,
+3. one terminal operation.
+
+### Creation
+There are many things to get streams from:
+* Hardcoded elements with `Stream.of()` similarly to `List.of()`, e.g. `Stream.of(1, 4, 10, 25)`.  
+    Not very useful in practice but good for examples here.
+* Collection (list, set, etc) elements with `stream()`, e.g. `List.of(1, 4, 10, 25).stream()`.  
+    Most commonly used.
+* Special streaming methods, e.g. `Files.lines(path)` gives a stream of strings of all lines in the file.
+
+### Terminal operations
+Once you have a stream, a terminal operation on it is required for anything to happen. As the name implies, such operation is always last.
+Some of the most common ones are:
+* `forEach(…)` runs something for every element, e.g. `Stream.of(1, 2, 3).forEach(System.out::println)` prints 1, 2 and 3.
+* `collect(Collectors.toList())` returns a list of all elements, e.g. `Stream.of(1, 2, 3).collect(Collectors.toList())` returns a list of 1, 2 and 3.
+* `count()` counts the elements, e.g. `Stream.of(1, 2, 3).count()` returns 3.
+* `anyMatch(…)`, `allMatch(…)`, `noneMatch(…)` to check whether something is true for some/all/none elements, e.g. `Stream.of(1, 2, 3).anyMatch(num -> num % 2 == 0)` returns true (because the element 2 is even).
+
+### Intermediate operations
+Between creation and the terminal operation, more operations may be added that do something with the elements. These operations always return a new stream, which can be used for more intermediate operations or finally a terminal one.
+Some of the most common ones are:
+* `filter(…)` only keeps the elements for which the predicate is true, e.g. `Stream.of(1, 2, 3).filter(num -> num % 2 != 0)` returns a stream of 1 and 3.
+* `map(…)` replaces elements according to a function, e.g. `Stream.of(1, 2, 3).map(num -> num + 7)` returns a stream of 8, 9 and 10.  
+    The function may return objects of a different type. In this case the returned stream will be of different type also.
+* `limit(…)` keeps at most the number of elements, e.g. `Stream.of(1, 2, 3, 4, 5).limit(3)` returns a stream of 1, 2 and 3.
+* `distinct()` removes duplicates, e.g. `Stream.of(1, 2, 3, 1, 2).distinct()` returns a stream of 1, 2 and 3 (the second 1 and 2 are discarded).
+
+### Chanining
+Intermediate operations can create chains of computational steps, for example
+```java
+IntStream.rangeClosed(1, 10)
+        .filter(i -> i % 2 == 0)
+        .map(i -> 2 * i)
+        .limit(3)
+        .forEach(System.out::println);
+```
+prints 4, 8 and 12. These are the doubles of first three even numbers in the range 1…10.
+This makes streams very convenient for working with all kinds of data because the operations can be written in a simple step-by-step manner. The same code could be written with a for-loop (feel free to try!) but in the resulting code it would be much harder to understand the computational steps, especially if the chain gets even longer.
+
+Note that the order of intermediate operations is important! Experiment with changing the order of `filter`, `map` and `limit` in this example and try to explain the changes that causes. 
+
+### Laziness
+Streams are lazy, which simply means they do as few operations as possible and as late as possible. For this reason, streams only start processing the elements when a terminal operation is run. All intermediate operations are simply "remembered" but not actually executed before necessary.
+
+This is illustrated by the following example where intermediate operations print something so we can see whether and when they run:
+```java
+IntStream.rangeClosed(1, 10)
+        .filter(i -> {
+            System.out.println("filter: " + i);
+            return i % 2 == 0;
+        })
+        .map(i -> {
+            System.out.println(" map: " + i);
+            return 2 * i;
+        })
+        .limit(3)
+        .forEach(i -> System.out.println("  forEach: " + i));
+```
+Its output is
+```
+filter: 1
+filter: 2
+ map: 2
+  forEach: 4
+filter: 3
+filter: 4
+ map: 4
+  forEach: 8
+filter: 5
+filter: 6
+ map: 6
+  forEach: 12
+```
+Observe how 7 to 10 were never even filtered, only matching filtered elements were mapped and everything finished after finding the asked three elements, which also got printed in the `forEach`. It is neat that thanks to laziness the stream automatically behaved efficiently, avoiding unnecessary computations, which requires additional complexity if simply attempted with a for-loop.
+
+Laziness also has one surprising consequence: it is possible to use infinite streams, which can be created with `Stream.generate(…)` and `Stream.iterate(…)`. Care must be taken to make sure the terminating operation finishes at all, i.e. such stream cannot be collected to a list but certain operations still work fine (e.g. `anyMatch`).
