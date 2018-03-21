@@ -92,4 +92,22 @@ Type inference is a double-edged sword:
 * it makes error messages weird and cryptic when something is incorrect (beware!).
 
 ## Method references
+When the body of the lambda is a single method call with all the same arguments as the lambda, like
+```java
+List.of(1, 2, 3).forEach(num -> System.out.println(num));
+```
+it can be replaced with a **method reference**:
+```java
+List.of(1, 2, 3).forEach(System.out::println);
+```
+
+The `::` indicates a method reference. Method references can be used like lambdas: the signature of the referred method must match the signature of the abstract method in the functional interface.
+
+Method references can be
+* references to a static method with the same parameters, e.g. `Math::round` is the same as `num -> Math.round(num)`,
+* references to an instance method of the parameter, e.g. `String::toLowerCase` is the same as `str -> str.toLowerCase()`,
+* references to an instance method of an object with the same parameters, e.g. `out::println` is the same as `obj -> out.println(obj)`.
+
+All of the above work with multiple parameters as well. There's no need to really remember these three forms. You can always just write a lambda and allow IntelliJ to suggest using a method reference instead if possible.
+
 ## Streams
