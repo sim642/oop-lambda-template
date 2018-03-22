@@ -114,6 +114,7 @@ All of the above work with multiple parameters as well. There's no need to reall
 
 ## Streams
 Streams are one of the main reasons for having lambdas in the first place. They are instances of the generic type `Stream<T>`, so they are a lot like collections (list, set, etc) but are also vastly different. While collections focus on storing elements, streams focus on manipulating elements and don't directly store them.
+These streams are completely unrelated to I/O streams like `InputStream` and `OutputStream`, don't confuse the two!
 
 There are three steps to using streams:
 1. creation,
