@@ -1,9 +1,9 @@
-package task5;
+package task6;
 
 import java.util.List;
 
 /**
- * TASK 5.
+ * TASK 6.
  *
  * Your task is to implement some methods that work on a list of books.
  * Preferably streams should be used with lambdas and method references.

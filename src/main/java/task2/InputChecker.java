@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 /**
  * TASK 2.
  *
- * Write a helper function for asking user input (an integer) from a Scanner.
+ * Write a helper method for asking user input (an integer) from a Scanner.
  * It should ask again if the entered number does not satisfy the given conditions (checked with a lambda).
  * It should ask again if the entered text is not a number at all.
  *
@@ -30,7 +30,7 @@ public class InputChecker {
     }
 
     public int askInt(String prompt, Predicate<Integer> badPredicate) {
-        // TODO: Implement this function, use given field out for output and scanner for input
+        // TODO: Implement this method, use given field out for output and scanner for input
         throw new UnsupportedOperationException("Not implemented");
     }
 

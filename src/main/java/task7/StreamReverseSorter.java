@@ -1,10 +1,10 @@
-package task6;
+package task7;
 
 import java.io.IOException;
 import java.nio.file.*;
 
 /**
- * TASK 6.
+ * TASK 7.
  *
  * This is task 1 taken to extremes.
  *
