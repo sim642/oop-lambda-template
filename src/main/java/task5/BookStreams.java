@@ -34,10 +34,9 @@ public class BookStreams {
     }
 
     /**
-     * Returns books that have the partially given author.
-     * Be case insensitive.
+     * Returns true if all books have more than one author, or false otherwise.
      */
-    private static List<Book> booksByPartialName(List<Book> books, String partialAuthor) {
+    private static boolean allManyAuthors(List<Book> books) {
         // TODO: Implement
         throw new UnsupportedOperationException("Not implemented");
     }
@@ -52,11 +51,29 @@ public class BookStreams {
     }
 
     /**
+     * Returns books that have the partially given author.
+     * Be case insensitive.
+     */
+    private static List<Book> booksByPartialName(List<Book> books, String partialAuthor) {
+        // TODO HARD: Implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    /**
+     * Returns the book with most authors.
+     */
+    private static Book bookWithMostAuthors(List<Book> books) {
+        // TODO HARD: Implement
+        // HINT: max
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    /**
      * Returns a list of book authors in alphabetic order.
      * Should not contain duplicate names.
      */
     private static List<String> allAuthorsAlphabetic(List<Book> books) {
-        // TODO: Implement
+        // TODO HARD: Implement
         // HINT: flatMap
         throw new UnsupportedOperationException("Not implemented");
     }
@@ -75,8 +92,10 @@ public class BookStreams {
         output("Titles only", bookTitles(books));
         output("Thick books", thickBooks(books));
         output("Books by \"Bloch, Joshua\"", booksByFullName(books, "Bloch, Joshua"));
-        output("Books by \"bloch\"", booksByPartialName(books, "bloch"));
+        output("All have many authors", allManyAuthors(books));
         output("Total pages", totalPages(books));
+        output("Books by \"bloch\"", booksByPartialName(books, "bloch"));
+        output("Book with most authors", bookWithMostAuthors(books));
         output("All authors in alphabetic order", allAuthorsAlphabetic(books));
     }
 

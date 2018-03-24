@@ -13,7 +13,7 @@ public class GuessingGame {
         // TODO: Create the FeedbackInputChecker
 
         // TODO: Generate the number to guess
-        // TODO: Abuse askInt to implement the game
+        // TODO: Abuse askInt to implement the game (needs to be called once, ignore return value)
 
         // TODO: Congratulate the user
     }

@@ -32,6 +32,7 @@ public class FeedbackInputChecker {
     }
 
     public int askInt(String prompt, InputFeedback<Integer> inputFeedback) {
+        // TODO: Study InputfeedBack interface
         // TODO: Implement this function, use given field out for output and scanner for input
         throw new UnsupportedOperationException("Not implemented");
     }

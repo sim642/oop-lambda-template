@@ -14,7 +14,7 @@ public class StreamReverseSorter {
     public static void main(String[] args) throws IOException {
         Path rootPath = Paths.get("src"); // hardcoded root path with existing files to avoid messing with args
 
-        // TODO: Create a stream of all files in rootPath, sort them in reverse and print them
+        // TODO HARD: Create a stream of all files in rootPath, sort them in reverse and print them
         // HINT: Files.walk
     }
 }
