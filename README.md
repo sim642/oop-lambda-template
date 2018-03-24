@@ -49,18 +49,21 @@ interface UltimateRunnable {
 ```
 
 While we can declare our own functional interfaces, there are also plenty of standard ones including but not limited to:
-`Runnable`, `Callable<V>`, `Supplier<T>`, `Consumer<T>`, `Predicate<T>`, `UnaryOperator<T>`, `Function<T, R>`, etc.
+`Runnable`, `Callable<V>`, `Supplier<T>`, `Consumer<T>`, `Predicate<T>`, `UnaryOperator<T>`, `Function<T, R>`, etc (in [`java.util.function` package](https://docs.oracle.com/javase/9/docs/api/java/util/function/package-summary.html)).
+
 You may notice they have a `@FunctionalInterface` annotation. This is not necessary (the examples above without it are just as correct) but the annotation makes the compiler check that there is exactly one abstract method and also makes it clear to anyone reading the code.
 
 ## Lambdas
 Lambdas consist of two parts, the parameters and the body, which are separated by an arrow: `(params) -> body`.
 
-There can be
+For **parameters** there can be
 * no parameters: `() -> body`,
-* one parameter: `(foo) -> body` or preferably `foo -> body`,
+* one parameter: `(foo) -> body` or _preferably_ `foo -> body`,
 * more parameters: `(foo, bar, baz) -> body`.
 
-The body can be
+_(Parameter types can be specified but it is unnecessary as we'll find out below.)_
+
+The **body** can be
 * a single line (implicit return): `num -> 2 * num`,
 * multiple lines (explicit return):
     ```java
@@ -75,7 +78,9 @@ Lambdas can be assigned to any variables, fields and parameters which's type is 
 ```java
 new Thread(() -> System.out.println("Hello, runnable!")).start();
 ```
-Lambdas are implementations of functional interfaces: the signature of the lambda must match the signature of the single abstract method in the interface. In that case the body of the lambda will be the implementation of that method. This saves us from having to write lots of boilerplate for anonymous inner classes as seen in the first example.
+**Lambdas are implementations of functional interfaces**: the signature of the lambda must match the signature of the single abstract method in the interface. In that case the body of the lambda will be the implementation of that method. This saves us from having to write lots of boilerplate for anonymous inner classes as seen in the first example.
+
+Implicit return of single line lambdas means the expression written into the body will actually still be returned, even though the `return` keyword is not there. If the single line body has a `void` type (like calling `println`), it will also work as the lambda obviously won't try to return it.
 
 While multiline lambdas are possible, they are often considered bad style. It is neater to put the long body into a separate method and call that instead in a single line lambda (or even better, use a method reference).
 
@@ -103,18 +108,19 @@ it can be replaced with a **method reference**:
 List.of(1, 2, 3).forEach(System.out::println);
 ```
 
-The `::` indicates a method reference. Method references can be used like lambdas: the signature of the referred method must match the signature of the abstract method in the functional interface.
+The `::` indicates a **method reference**. Method references can be used like lambdas: the signature of the referred method must match the signature of the abstract method in the functional interface.
 
 Method references can be
 * references to a static method with the same parameters, e.g. `Math::round` is the same as `num -> Math.round(num)`,
 * references to an instance method of the parameter, e.g. `String::toLowerCase` is the same as `str -> str.toLowerCase()`,
-* references to an instance method of an object with the same parameters, e.g. `out::println` is the same as `obj -> out.println(obj)`.
+* references to an instance method of an object with the same parameters, e.g. `out::println` is the same as `obj -> out.println(obj)`. This is the case for `System.out::println`.
 
 All of the above work with multiple parameters as well. There's no need to really remember these three forms. You can always just write a lambda and allow IntelliJ to suggest using a method reference instead if possible.
 
 ## Streams
-Streams are one of the main reasons for having lambdas in the first place. They are instances of the generic type `Stream<T>`, so they are a lot like collections (list, set, etc) but are also vastly different. While collections focus on storing elements, streams focus on manipulating elements and don't directly store them.
-These streams are completely unrelated to I/O streams like `InputStream` and `OutputStream`, don't confuse the two!
+Streams are one of the main reasons for having lambdas in the first place. They are instances of the generic type `Stream<T>`, so they are a lot like collections (list, set, etc) but are also vastly different. While collections focus on storing elements, **streams focus on manipulating elements** and don't directly store them.
+
+_These streams are completely unrelated to I/O streams like `InputStream` and `OutputStream`, don't confuse the two!_
 
 There are three steps to using streams:
 1. creation,
@@ -146,8 +152,8 @@ Some of the most common ones are:
 * `limit(…)` keeps at most the number of elements, e.g. `Stream.of(1, 2, 3, 4, 5).limit(3)` returns a stream of 1, 2 and 3.
 * `distinct()` removes duplicates, e.g. `Stream.of(1, 2, 3, 1, 2).distinct()` returns a stream of 1, 2 and 3 (the second 1 and 2 are discarded).
 
-### Chanining
-Intermediate operations can create chains of computational steps, for example
+### Chaining operations
+Intermediate operations can create (long) chains of computational steps, for example
 ```java
 IntStream.rangeClosed(1, 10)
         .filter(i -> i % 2 == 0)
@@ -163,7 +169,7 @@ Note that the order of intermediate operations is important! Experiment with cha
 ### Laziness
 Streams are lazy, which simply means they do as few operations as possible and as late as possible. For this reason, streams only start processing the elements when a terminal operation is run. All intermediate operations are simply "remembered" but not actually executed before necessary.
 
-This is illustrated by the following example where intermediate operations print something so we can see whether and when they run:
+This is illustrated by the following example where intermediate operations print something so we can see whether and when they run (never do this in practice):
 ```java
 IntStream.rangeClosed(1, 10)
         .filter(i -> {
@@ -194,7 +200,7 @@ filter: 6
 ```
 Observe how 7 to 10 were never even filtered, only matching filtered elements were mapped and everything finished after finding the asked three elements, which also got printed in the `forEach`. It is neat that thanks to laziness the stream automatically behaved efficiently, avoiding unnecessary computations, which requires additional complexity if simply attempted with a for-loop.
 
-Laziness also has one surprising consequence: it is possible to use infinite streams, which can be created with `Stream.generate(…)` and `Stream.iterate(…)`. Care must be taken to make sure the terminating operation finishes at all, i.e. such stream cannot be collected to a list but certain operations still work fine (e.g. `anyMatch`).
+Laziness also has one surprising consequence: it is possible to use **infinite streams**, which can be created with `Stream.generate(…)` and `Stream.iterate(…)`. Care must be taken to make sure the terminating operation finishes at all, i.e. such stream cannot be collected to a list but certain operations still work fine (e.g. `anyMatch`).
 
 
 # Tasks
