@@ -201,6 +201,7 @@ filter: 6
 Observe how 7 to 10 were never even filtered, only matching filtered elements were mapped and everything finished after finding the asked three elements, which also got printed in the `forEach`. It is neat that thanks to laziness the stream automatically behaved efficiently, avoiding unnecessary computations, which requires additional complexity if simply attempted with a for-loop.
 
 Laziness also has one surprising consequence: it is possible to use **infinite streams**, which can be created with `Stream.generate(…)` and `Stream.iterate(…)`. Care must be taken to make sure the terminating operation finishes at all, i.e. such stream cannot be collected to a list but certain operations still work fine (e.g. `anyMatch`).
+Infinite streams are quite obscure and not too useful in practice but it may be interesting to know that working with something infinite is possible.
 
 
 # Tasks
