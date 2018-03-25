@@ -12,6 +12,14 @@ import java.util.stream.Stream;
  */
 public class InfiniteStreams {
     /**
+     * Returns an infinite stream of random integers (1…100).
+     */
+    private static Stream<Integer> randomInts() {
+        // TODO: Implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    /**
      * Returns an infinite stream of all positive integers.
      */
     private static Stream<Integer> positiveInts() {
@@ -47,6 +55,7 @@ public class InfiniteStreams {
     }
 
     public static void main(String[] args) {
+        outputInfinite("Random integers", InfiniteStreams::randomInts);
         outputInfinite("Positive integers", InfiniteStreams::positiveInts);
         outputInfinite("Positive integer squares", InfiniteStreams::positiveIntSquares);
         outputInfinite("Primes", InfiniteStreams::primes);
