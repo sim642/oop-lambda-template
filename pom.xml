@@ -14,10 +14,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>3.7.0</version>
                 <configuration>
+                    <!-- 1.9 or 9? -->
                     <source>1.9</source>
                     <target>1.9</target>
+
+                    <!-- or <release>? -->
                 </configuration>
             </plugin>
         </plugins>
