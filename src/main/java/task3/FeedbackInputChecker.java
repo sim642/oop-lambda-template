@@ -2,12 +2,13 @@ package task3;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import java.util.function.Predicate;
 
 /**
  * TASK 3.
  *
- * This task is an extension of task 2. Now we want to show the user error messages if the input is bad but still continue asking until satisfied.
+ * This task is an extension of task 2. Now we want to
+ * show the user error messages if the input is bad but
+ * still continue asking until satisfied.
  *
  * An example run of the given program should go as follows:
  *
@@ -32,7 +33,7 @@ public class FeedbackInputChecker {
     }
 
     public int askInt(String prompt, InputFeedback<Integer> inputFeedback) {
-        // TODO: Study InputfeedBack interface
+        // TODO: Study the InputfeedBack interface
         // TODO: Implement this method, use given field out for output and scanner for input
         throw new UnsupportedOperationException("Not implemented");
     }

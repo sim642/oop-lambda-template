@@ -1,7 +1,5 @@
 package task5;
 
-import java.util.List;
-
 /**
  * TASK 5.
  *
@@ -10,7 +8,9 @@ import java.util.List;
  */
 public class Semigroup {
 
-    // TODO: Find which standard functional interface to use for the second argument (or if you can't find one, define it yourself)
+    // TODO: Find which built-in functional interface from java.util.function could
+    // be used for the second argument (or if you can't find one, define it yourself)
+
     // TODO: Figure out the signature for combine method
     // TODO: Implement the combine method
 

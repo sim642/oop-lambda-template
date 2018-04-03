@@ -48,24 +48,26 @@ interface UltimateRunnable {
 }
 ```
 
-While we can declare our own functional interfaces, there are also plenty of standard ones including but not limited to:
+While we can declare our own functional interfaces, Java also has plenty of built-in general interfaces including but not limited to:
 `Runnable`, `Callable<V>`, `Supplier<T>`, `Consumer<T>`, `Predicate<T>`, `UnaryOperator<T>`, `Function<T, R>`, etc (in [`java.util.function` package](https://docs.oracle.com/javase/9/docs/api/java/util/function/package-summary.html)).
 
 You may notice they have a `@FunctionalInterface` annotation. This is not necessary (the examples above without it are just as correct) but the annotation makes the compiler check that there is exactly one abstract method and also makes it clear to anyone reading the code.
 
 ## Lambdas
+Lambda expressions are very similar to method declarations.
+You can consider lambda expressions as anonymous methods - methods without a name.
 Lambdas consist of two parts, the parameters and the body, which are separated by an arrow: `(params) -> body`.
 
 For **parameters** there can be
 * no parameters: `() -> body`,
 * one parameter: `(foo) -> body` or _preferably_ `foo -> body`,
-* more parameters: `(foo, bar, baz) -> body`.
+* many parameters: `(foo, bar, baz) -> body`.
 
 _(Parameter types can be specified but it is unnecessary as we'll find out below.)_
 
 The **body** can be
 * a single line (implicit return): `num -> 2 * num`,
-* multiple lines (explicit return):
+* multiple lines enclosed in braces (explicit return):
     ```java
     num -> {
         System.out.println(num);
@@ -74,22 +76,26 @@ The **body** can be
     ```
 
 ### Lambda usage
-Lambdas can be assigned to any variables, fields and parameters which's type is a functional interface. So the first example can be shortened ever further by avoiding a variable:
+Lambdas can be assigned to any variables, fields and parameters which's type is a functional interface. So the first example can be shortened ever further by avoiding the variable:
 ```java
+Runnable r = () -> System.out.println("Hello, runnable!");
+new Thread(r).start();
+
+// simplified:
 new Thread(() -> System.out.println("Hello, runnable!")).start();
 ```
 **Lambdas are implementations of functional interfaces**: the signature of the lambda must match the signature of the single abstract method in the interface. In that case the body of the lambda will be the implementation of that method. This saves us from having to write lots of boilerplate for anonymous inner classes as seen in the first example.
 
-Implicit return of single line lambdas means the expression written into the body will actually still be returned, even though the `return` keyword is not there. If the single line body has a `void` type (like calling `println`), it will also work as the lambda obviously won't try to return it.
+Implicit return of single line lambdas means the expression written into the body will actually still be returned, even though the `return` keyword is not there. If the single line body has a `void` type (like calling `println`), it will also work and the lambda obviously won't try to return it.
 
-While multiline lambdas are possible, they are often considered bad style. It is neater to put the long body into a separate method and call that instead in a single line lambda (or even better, use a method reference).
+While multiline lambdas are possible, they are often considered bad style. It is neater to extract the long body into a separate method and instead call that in a single line lambda (or even better, use a method reference).
 
 ### Lambda types
 Java is a statically typed language and so far every variable, field and parameter type has been explicitly written out but that's not the case with lambdas: usually the parameters only have names and the return type isn't written. How can this possibly work and still be correct?
 
 The answer is **type inference** (more specifically [target typing](https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html#target-typing)): the compiler automatically figures out the types and checks them based on the context where the lambda is written. For example:
 ```java
-UnaryOperator<Integer> doubler = num -> 2 * num;
+java.util.function.UnaryOperator<Integer> doubler = num -> 2 * num;
 System.out.println(doubler.apply(7)); // prints 14
 ```
 The `UnaryOperator<Integer>` interface has a (only!) method with one integer parameter that returns an integer. Knowing this, it only makes sense that the `num` parameter in the lambda is an integer as well and the body must be an integer expression to be implicitly returned.
@@ -99,7 +105,7 @@ Type inference is a double-edged sword:
 * it makes error messages weird and cryptic when something is incorrect (beware!).
 
 ## Method references
-When the body of the lambda is a single method call with all the same arguments as the lambda, like
+When the body of the lambda is a single method call with all the same arguments as the lambda, such as
 ```java
 List.of(1, 2, 3).forEach(num -> System.out.println(num));
 ```
