@@ -211,5 +211,5 @@ Infinite streams are quite obscure and not too useful in practice but it may be 
 
 
 # Tasks
-Clone this project and open it in IntelliJ. You'll find tasks in respective packages in order of increasing difficulty. Read their description comments, look at examples and do everything marked as `// TODO`.  
+Clone [this project](https://github.com/sim642/oop-lambda-template) and open it in IntelliJ. You'll find tasks in respective packages in order of increasing difficulty. Read their description comments, look at examples and do everything marked as `// TODO`.  
 _Beware that some tasks are marked `HARD`: they go slightly beyond this material so don't feel bad if you aren't able to solve them._
