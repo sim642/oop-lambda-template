@@ -1,6 +1,9 @@
 package task6;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * TASK 6.
@@ -14,7 +17,9 @@ public class BookStreams {
      */
     private static List<String> bookTitles(List<Book> books) {
         // TODO: Implement
-        throw new UnsupportedOperationException("Not implemented");
+        return books.stream()
+                .map(Book::getTitle)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -22,7 +27,9 @@ public class BookStreams {
      */
     private static List<Book> thickBooks(List<Book> books) {
         // TODO: Implement
-        throw new UnsupportedOperationException("Not implemented");
+        return books.stream()
+                .filter(book -> book.getPages() >= 500)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -30,7 +37,9 @@ public class BookStreams {
      */
     private static List<Book> booksByFullName(List<Book> books, String author) {
         // TODO: Implement
-        throw new UnsupportedOperationException("Not implemented");
+        return books.stream()
+                .filter(book -> book.getAuthors().contains(author))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -38,7 +47,8 @@ public class BookStreams {
      */
     private static boolean allManyAuthors(List<Book> books) {
         // TODO: Implement
-        throw new UnsupportedOperationException("Not implemented");
+        return books.stream()
+                .allMatch(book -> book.getAuthors().size() > 1);
     }
 
     /**
@@ -47,7 +57,9 @@ public class BookStreams {
     private static int totalPages(List<Book> books) {
         // TODO: Implement
         // HINT: mapToInt, sum
-        throw new UnsupportedOperationException("Not implemented");
+        return books.stream()
+                .mapToInt(Book::getPages)
+                .sum();
     }
 
     /**
@@ -56,7 +68,11 @@ public class BookStreams {
      */
     private static List<Book> booksByPartialName(List<Book> books, String partialAuthor) {
         // TODO HARD: Implement
-        throw new UnsupportedOperationException("Not implemented");
+        return books.stream()
+                .filter(book -> book.getAuthors().stream() // stream within a stream
+                        .anyMatch(author -> author.toLowerCase().contains(partialAuthor.toLowerCase()))
+                )
+                .collect(Collectors.toList());
     }
 
     /**
@@ -65,7 +81,10 @@ public class BookStreams {
     private static Book bookWithMostAuthors(List<Book> books) {
         // TODO HARD: Implement
         // HINT: max
-        throw new UnsupportedOperationException("Not implemented");
+        return books.stream()
+                .max((lhs, rhs) -> Integer.compare(lhs.getAuthors().size(), rhs.getAuthors().size()))
+                //.max(Comparator.comparingInt(book -> book.getAuthors().size())) // IntelliJ suggests neater way
+                .get();
     }
 
     /**
@@ -75,7 +94,11 @@ public class BookStreams {
     private static List<String> allAuthorsAlphabetic(List<Book> books) {
         // TODO HARD: Implement
         // HINT: flatMap
-        throw new UnsupportedOperationException("Not implemented");
+        return books.stream()
+                .flatMap(book -> book.getAuthors().stream()) // stream within a stream
+                .sorted()
+                .distinct() // remove duplicates
+                .collect(Collectors.toList());
     }
 
     public static void main(String[] args) {

@@ -31,7 +31,18 @@ public class InputChecker {
 
     public int askInt(String prompt, Predicate<Integer> badPredicate) {
         // TODO: Implement this method, use given field out for output and scanner for input
-        throw new UnsupportedOperationException("Not implemented");
+        while (true) {
+            System.out.print(prompt);
+            String line = scanner.nextLine();
+            try {
+                int i = Integer.parseInt(line); // better than scanner.nextInt() because that doesn't nicely handle input like "-1a"
+                if (!badPredicate.test(i))
+                    return i;
+            }
+            catch (NumberFormatException ignored) {
+
+            }
+        }
     }
 
     public static void main(String[] args) {

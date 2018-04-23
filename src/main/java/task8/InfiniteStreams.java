@@ -1,7 +1,9 @@
 package task8;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -16,7 +18,7 @@ public class InfiniteStreams {
      */
     private static Stream<Integer> randomInts() {
         // TODO: Implement
-        throw new UnsupportedOperationException("Not implemented");
+        return Stream.generate(() -> ThreadLocalRandom.current().nextInt(1, 100 + 1));
     }
 
     /**
@@ -24,7 +26,7 @@ public class InfiniteStreams {
      */
     private static Stream<Integer> positiveInts() {
         // TODO: Implement
-        throw new UnsupportedOperationException("Not implemented");
+        return Stream.iterate(1, i -> i + 1);
     }
 
     /**
@@ -33,7 +35,8 @@ public class InfiniteStreams {
     private static Stream<Integer> positiveIntSquares() {
         // TODO: Implement
         // HINT: reuse positiveInts
-        throw new UnsupportedOperationException("Not implemented");
+        return positiveInts()
+                .map(i -> i * i);
     }
 
     /**
@@ -42,7 +45,13 @@ public class InfiniteStreams {
     private static Stream<Integer> primes() {
         // TODO HARD: Implement
         // HINT: Create a helper method for checking whether a number is prime (also use a stream).
-        throw new UnsupportedOperationException("Not implemented");
+        return positiveInts()
+                .filter(InfiniteStreams::isPrime);
+    }
+
+    private static boolean isPrime(int n) {
+        return IntStream.range(2, n)
+                .noneMatch(i -> n % i == 0);
     }
 
     /**
@@ -51,7 +60,26 @@ public class InfiniteStreams {
     private static Stream<Integer> fibonacci() {
         // TODO HARD: Implement
         // HINT: Create a helper class for a pair of consecutive Fibonacci numbers.
-        throw new UnsupportedOperationException("Not implemented");
+        return Stream.iterate(new FibonacciPair(0, 1), FibonacciPair::next)
+                .map(FibonacciPair::getCurrent);
+    }
+
+    private static class FibonacciPair {
+        private final int current;
+        private final int next;
+
+        private FibonacciPair(int current, int next) {
+            this.current = current;
+            this.next = next;
+        }
+
+        private FibonacciPair next() {
+            return new FibonacciPair(next, current + next);
+        }
+
+        private int getCurrent() {
+            return current;
+        }
     }
 
     public static void main(String[] args) {
@@ -66,6 +94,7 @@ public class InfiniteStreams {
 
     private static <T> void outputInfinite(String prompt, Supplier<Stream<T>> streamSupplier) {
         Stream<T> stream = streamSupplier.get(); // TODO: Explain why Supplier is used here.
+        // Streams aren't reusable so above there are methods to return new copies of the same stream that can be used
         String elemStr = stream
                 .limit(20)
                 .map(Object::toString)

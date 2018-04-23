@@ -35,22 +35,39 @@ public class FeedbackInputChecker {
     public int askInt(String prompt, InputFeedback<Integer> inputFeedback) {
         // TODO: Study the InputfeedBack interface
         // TODO: Implement this method, use given field out for output and scanner for input
-        throw new UnsupportedOperationException("Not implemented");
+        // mostly copied from InputChecker
+        while (true) {
+            System.out.print(prompt);
+            String line = scanner.nextLine();
+            try {
+                int i = Integer.parseInt(line);
+                String feedback = inputFeedback.check(i);
+                if (feedback != null)
+                    System.out.println(feedback);
+                else
+                    return i;
+            }
+            catch (NumberFormatException ignored) {
+                System.out.println("Not a number!");
+            }
+        }
     }
 
     public static void main(String[] args) {
         FeedbackInputChecker input = new FeedbackInputChecker(System.out, new Scanner(System.in));
 
         // TODO: Refactor this outrageous multiline lambda
-        int num = input.askInt("Choose a number between 1 and 100: ", i -> {
-            if (i < 1)
-                return "Too small!";
-            else if (i > 100)
-                return "Too large!";
-            else
-                return null;
-        });
+        int num = input.askInt("Choose a number between 1 and 100: ", FeedbackInputChecker::checkRange); // extract multiline lambda
 
         System.out.println(num == 42 ? "Correct answer!" : "Wrong answer!");
+    }
+
+    private static String checkRange(Integer i) {
+        if (i < 1)
+            return "Too small!";
+        else if (i > 100)
+            return "Too large!";
+        else
+            return null;
     }
 }

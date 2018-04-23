@@ -2,6 +2,7 @@ package task7;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.Comparator;
 
 /**
  * TASK 7.
@@ -16,5 +17,9 @@ public class StreamReverseSorter {
 
         // TODO HARD: Create a stream of all files in rootPath, sort them in reverse and print them
         // HINT: Files.walk
+        Files.walk(rootPath)
+                .filter(Files::isRegularFile) // exclude directories
+                .sorted(Comparator.reverseOrder())
+                .forEach(System.out::println);
     }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -21,7 +22,9 @@ public class ReverseSorter {
         List<String> filenames = new ArrayList<>();
 
         // TODO: What is this SimpleFileVisitor?
+        // A FileVisitor implementation that doesn't require implementing all the methods.
         // TODO: Can this anonymous inner class be replaced with a lambda? Why? Why not?
+        // No, because SimpleFileVisitor is a class, not an interface. Furthermore, there's even no abstract methods.
         Files.walkFileTree(rootPath, new SimpleFileVisitor<>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
@@ -31,9 +34,14 @@ public class ReverseSorter {
         });
 
         // TODO: Sort the filenames in REVERSE order using a lambda
+        filenames.sort((lhs, rhs) -> rhs.compareTo(lhs));
 
         // TODO: Print the filenames on separate lines using a lambda
+        filenames.forEach(filename -> System.out.println(filename));
 
         // TODO: Can we use method references anywhere? Why? Why not?
+        // IntelliJ suggests instead:
+        filenames.sort(Comparator.reverseOrder()); // not really a method reference: calls method with (), no ::
+        filenames.forEach(System.out::println); // method reference: println takes one argument
     }
 }

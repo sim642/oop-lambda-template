@@ -1,5 +1,8 @@
 package task5;
 
+import java.util.List;
+import java.util.function.BinaryOperator;
+
 /**
  * TASK 5.
  *
@@ -10,15 +13,26 @@ public class Semigroup {
 
     // TODO: Find which built-in functional interface from java.util.function could
     // be used for the second argument (or if you can't find one, define it yourself)
+    // BinaryOperator<T>
 
     // TODO: Figure out the signature for combine method
     // TODO: Implement the combine method
+    private static <T> T combine(List<T> values, BinaryOperator<T> op) {
+        T total = values.get(0);
+        for (int i = 1; i < values.size(); i++) { // from 1
+            total = op.apply(total, values.get(i));
+        }
+        return total;
+    }
 
     // TODO HARD: Reimplement the method using streams
+    /*private static <T> T combine(List<T> values, BinaryOperator<T> op) {
+        return values.stream().reduce(op).get();
+    }*/
 
     public static void main(String[] args) {
         // TODO: Uncomment these examples
-        /*List<Integer> ints = List.of(1, 3, 10, -5);
+        List<Integer> ints = List.of(1, 3, 10, -5);
         output("int sum",     combine(ints, (l, r) -> l + r)); // should be 9
         output("int product", combine(ints, (l, r) -> l * r)); // should be -150
         output("int min",     combine(ints, Math::min));       // should be -5
@@ -26,7 +40,7 @@ public class Semigroup {
 
         List<String> strings = List.of("foo", "bar", "baz");
         output("string concat", combine(strings, (l, r) -> l + r));        // should be "foobarbaz"
-        output("string join",   combine(strings, (l, r) -> l + ", " + r)); // should be "foo, bar, baz"*/
+        output("string join",   combine(strings, (l, r) -> l + ", " + r)); // should be "foo, bar, baz"
     }
 
     private static <T> void output(String prompt, T obj) {
